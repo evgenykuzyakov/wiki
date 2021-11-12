@@ -5,6 +5,9 @@ import "bootstrap/dist/js/bootstrap.bundle";
 import "./App.scss";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { NearConfig, useNear } from "./data/near";
+import ArticlePage from "./pages/ArticlePage";
+
+export const refreshAllowanceObj = {};
 
 function App(props) {
   const [connected, setConnected] = useState(false);
@@ -43,6 +46,7 @@ function App(props) {
     await logOut();
     await requestSignIn();
   }, [logOut, requestSignIn]);
+  refreshAllowanceObj.refreshAllowance = refreshAllowance;
 
   useEffect(() => {
     _near.then((near) => {
@@ -90,12 +94,14 @@ function App(props) {
       <Router basename={process.env.PUBLIC_URL}>
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
           <div className="container-fluid">
-            <a
-              className="navbar-brand"
-              href="https://wiki"
-              title="wiki"
-            >
-              wiki
+            <a className="navbar-brand" href="/" title="the wiki">
+              <img
+                src="/favicon.png"
+                alt="the wiki logo"
+                height="24"
+                class="d-inline-block align-text-top me-2"
+              />
+              the wiki
             </a>
             <button
               className="navbar-toggler"
@@ -125,8 +131,11 @@ function App(props) {
         </nav>
 
         <Switch>
-          <Route exact path={"/"}>
-            <MainPage {...passProps} />
+          <Route path={"/edit/:articleId?"}>
+            <ArticlePage {...passProps} edit />
+          </Route>
+          <Route exact path={"/:articleId?"}>
+            <ArticlePage {...passProps} />
           </Route>
         </Switch>
       </Router>

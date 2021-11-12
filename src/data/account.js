@@ -1,7 +1,7 @@
 import { singletonHook } from "react-singleton-hook";
 import { useEffect, useState } from "react";
 import { useNear } from "./near";
-
+import { keysToCamel } from "./utils";
 
 const defaultAccount = {
   loading: true,
@@ -20,7 +20,14 @@ const loadAccount = async (near, setAccount) => {
     refresh: async () => await loadAccount(near, setAccount),
   };
   if (accountId) {
-    account.state = await near.account.state();
+    const [rawAccount, state] = await Promise.all([
+      near.contract.get_account({
+        account_id: accountId,
+      }),
+      near.account.state(),
+    ]);
+    account.account = keysToCamel(rawAccount);
+    account.state = state;
   }
 
   setAccount(account);

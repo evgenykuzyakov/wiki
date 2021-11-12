@@ -1,6 +1,7 @@
 import * as nearAPI from "near-api-js";
 import { singletonHook } from "react-singleton-hook";
 import Big from "big.js";
+import { refreshAllowanceObj } from "../App";
 
 export const TGas = Big(10).pow(12);
 export const MaxGasPerTransaction = TGas.mul(300);
@@ -15,7 +16,7 @@ export const randomPublicKey = nearAPI.utils.PublicKey.from(
 // const isLocalhost = window.location.hostname === "localhost";
 
 export const IsMainnet = true;
-const TestnetContract = "wiki.testnet";
+const TestnetContract = "dev-1636746667499-69374496923949";
 const TestNearConfig = {
   networkId: "testnet",
   nodeUrl: "https://rpc.testnet.near.org",
@@ -25,7 +26,7 @@ const TestNearConfig = {
   storageCostPerByte: StorageCostPerByte,
   wrapNearAccountId: "wrap.testnet",
 };
-const MainnetContract = "wiki.near";
+const MainnetContract = "thewiki.near";
 export const MainNearConfig = {
   networkId: "mainnet",
   nodeUrl: "https://rpc.mainnet.near.org",
@@ -38,6 +39,32 @@ export const MainNearConfig = {
 
 export const NearConfig = IsMainnet ? MainNearConfig : TestNearConfig;
 export const LsKey = NearConfig.contractName + ":v01:";
+
+function wrapContract(account, contractId, options) {
+  const nearContract = new nearAPI.Contract(account, contractId, options);
+  const { viewMethods = [], changeMethods = [] } = options;
+  const contract = {
+    account,
+    contractId,
+  };
+  viewMethods.forEach((methodName) => {
+    contract[methodName] = nearContract[methodName];
+  });
+  changeMethods.forEach((methodName) => {
+    contract[methodName] = async (...args) => {
+      try {
+        return await nearContract[methodName](...args);
+      } catch (e) {
+        const msg = e.toString();
+        if (msg.indexOf("does not have enough balance") !== -1) {
+          return await refreshAllowanceObj.refreshAllowance();
+        }
+        throw e;
+      }
+    };
+  });
+  return contract;
+}
 
 async function _initNear() {
   const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore();
@@ -65,16 +92,15 @@ async function _initNear() {
   _near.accountId = _near.walletConnection.getAccountId();
   _near.account = _near.walletConnection.account();
 
-  _near.contract = new nearAPI.Contract(
-    _near.account,
-    NearConfig.contractName,
-    {
-      viewMethods: [
-
-      ],
-      changeMethods: [],
-    }
-  );
+  _near.contract = wrapContract(_near.account, NearConfig.contractName, {
+    viewMethods: [
+      "get_article",
+      "get_article_ids_paged",
+      "get_account",
+      "get_accounts_paged",
+    ],
+    changeMethods: ["post_article"],
+  });
 
   _near.fetchBlockHash = async () => {
     const block = await nearConnection.connection.provider.block({

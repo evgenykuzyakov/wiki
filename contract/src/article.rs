@@ -102,7 +102,7 @@ impl Contract {
         } else {
             0
         };
-        let article = Article::new(edit_version, body, article_id.clone());
+        let article = Article::new(edit_version, body, account_id);
         account.add_article(&article_id, article.get_article_bytes());
         self.internal_set_account(&article.author, account);
         self.internal_set_article(&article_id, article);

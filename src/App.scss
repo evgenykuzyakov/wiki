@@ -25,3 +25,12 @@ body, html {
     color: #fff !important;
   };
 }
+
+.article {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+  img {
+    max-width: 100%;
+  }
+}
