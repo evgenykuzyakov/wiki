@@ -1,33 +1,43 @@
-use near_contract_standards::fungible_token::core_impl::ext_fungible_token;
+mod account;
+mod article;
+mod util;
+
+pub use account::*;
+pub use article::*;
+use util::*;
+
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, UnorderedMap};
-use near_sdk::json_types::{ValidAccountId, WrappedBalance, U128};
-use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{
-    env, ext_contract, near_bindgen, AccountId, Balance, BorshStorageKey, Gas, PanicOnDefault,
-    Promise,
-};
+use near_sdk::collections::{LookupMap, UnorderedMap, UnorderedSet};
+use near_sdk::json_types::ValidAccountId;
+use near_sdk::serde::Serialize;
+use near_sdk::{env, near_bindgen, AccountId, Balance, BorshStorageKey, PanicOnDefault};
 
 near_sdk::setup_alloc!();
-
-const TGAS: Gas = 1_000_000_000_000;
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKey {
     Accounts,
+    AccountArticles { account_id: AccountId },
+    Articles,
+    ArticleIds,
 }
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
+    accounts: UnorderedMap<AccountId, VAccount>,
+    articles: LookupMap<ArticleId, VArticle>,
+    article_ids: UnorderedSet<ArticleId>,
 }
 
 #[near_bindgen]
 impl Contract {
     #[init]
-    pub fn new(
-    ) -> Self {
-        Self {}
+    pub fn new() -> Self {
+        Self {
+            accounts: UnorderedMap::new(StorageKey::Accounts),
+            articles: LookupMap::new(StorageKey::Articles),
+            article_ids: UnorderedSet::new(StorageKey::ArticleIds),
+        }
     }
-
 }
