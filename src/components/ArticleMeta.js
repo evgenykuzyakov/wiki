@@ -47,12 +47,12 @@ export default function ArticleMeta(props) {
           View edit history
         </Link>
       )}
-      {article && previewButton && (
+      {article && (
         <Link
           to={`/block/${article.blockHeight}/${articleId}`}
           className="me-2 mt-2 btn btn-outline-secondary"
         >
-          View this version
+          Permanent URL
         </Link>
       )}
     </div>
