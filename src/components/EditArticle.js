@@ -18,8 +18,9 @@ const defaultBody = (articleId) => `# ${articleId}
 export default function EditArticle(props) {
   const mdEditor = React.useRef(null);
 
+  const blockId = props.blockId;
   const articleId = props.articleId;
-  const { article, refreshArticle } = useArticle(articleId);
+  const { article, refreshArticle } = useArticle(articleId, blockId);
   const account = useAccount();
 
   const [loading, setLoading] = useState(true);
@@ -29,7 +30,7 @@ export default function EditArticle(props) {
   useEffect(() => {
     document.title = articleId
       ? `Editing ${articleId} | wiki`
-      : "Editing main page | wiki";
+      : "Editing the main page | wiki";
   }, [articleId]);
 
   useEffect(() => {
@@ -67,6 +68,11 @@ export default function EditArticle(props) {
     Loading
   ) : (
     <div>
+      {!account.accountId && (
+        <div className="alert alert-warning">
+          You need to sign in to edit this article
+        </div>
+      )}
       <div className="mb-3">
         <Editor
           ref={mdEditor}

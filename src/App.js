@@ -6,6 +6,7 @@ import "./App.scss";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { NearConfig, useNear } from "./data/near";
 import ArticlePage from "./pages/ArticlePage";
+import HistoryPage from "./pages/HistoryPage";
 
 export const refreshAllowanceObj = {};
 
@@ -99,7 +100,7 @@ function App(props) {
                 src="/favicon.png"
                 alt="the wiki logo"
                 height="24"
-                class="d-inline-block align-text-top me-2"
+                className="d-inline-block align-text-top me-2"
               />
               the wiki
             </a>
@@ -131,8 +132,20 @@ function App(props) {
         </nav>
 
         <Switch>
+          <Route path={"/block/:blockId/edit/:articleId?"}>
+            <ArticlePage {...passProps} edit />
+          </Route>
+          <Route path={"/block/:blockId/:articleId?"}>
+            <ArticlePage {...passProps} />
+          </Route>
           <Route path={"/edit/:articleId?"}>
             <ArticlePage {...passProps} edit />
+          </Route>
+          <Route exact path={"/history/:articleId?"}>
+            <HistoryPage {...passProps} />
+          </Route>
+          <Route exact path={"/article/:articleId?"}>
+            <ArticlePage {...passProps} />
           </Route>
           <Route exact path={"/:articleId?"}>
             <ArticlePage {...passProps} />

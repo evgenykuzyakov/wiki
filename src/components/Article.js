@@ -7,7 +7,8 @@ import ArticleMeta from "./ArticleMeta";
 
 export default function Article(props) {
   const articleId = props.articleId;
-  const { article } = useArticle(articleId);
+  const blockId = props.blockId;
+  const { article } = useArticle(articleId, blockId);
 
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +18,6 @@ export default function Article(props) {
 
   useEffect(() => {
     if (article || article === false) {
-      console.log(article);
       setLoading(false);
     }
   }, [article]);
@@ -27,7 +27,7 @@ export default function Article(props) {
   ) : (
     <div>
       {article ? (
-        <div class="article">
+        <div className="article">
           <ReactMarkdown plugins={[gfm]}>{article.body}</ReactMarkdown>
         </div>
       ) : (

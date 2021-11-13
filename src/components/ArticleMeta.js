@@ -6,19 +6,56 @@ export default function ArticleMeta(props) {
   const articleId = props.articleId;
   const article = props.article;
   const showEdit = props.showEdit;
-  const editText = showEdit ? (
-    <div>
-      <Link
-        to={`/edit/${articleId}`}
-        className={`mt-3 btn ${
-          article ? "btn-outline-secondary" : "btn-primary"
-        }`}
-      >
-        {article ? "Edit this article" : "Create this article"}
-      </Link>
+  const previewButton = props.previewButton;
+  const buttons = (
+    <div className="mt-3">
+      {previewButton && (
+        <button
+          className="me-2 btn btn-primary"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={`#${previewButton}`}
+          aria-expanded="false"
+          aria-controls={previewButton}
+        >
+          Toggle article preview
+        </button>
+      )}
+      {showEdit && !previewButton && (
+        <Link
+          to={`/edit/${articleId}`}
+          className={`me-2 btn ${
+            article ? "btn-outline-secondary" : "btn-primary"
+          }`}
+        >
+          {article ? "Edit this article" : "Create this article"}
+        </Link>
+      )}
+      {showEdit && previewButton && (
+        <Link
+          to={`/block/${article.blockHeight}/edit/${articleId}`}
+          className={`me-2 btn btn-outline-secondary`}
+        >
+          Edit this version
+        </Link>
+      )}
+      {article && !previewButton && (
+        <Link
+          to={`/history/${articleId}`}
+          className="me-2 btn btn-outline-secondary"
+        >
+          View edit history
+        </Link>
+      )}
+      {article && previewButton && (
+        <Link
+          to={`/block/${article.blockHeight}/${articleId}`}
+          className="me-2 btn btn-outline-secondary"
+        >
+          View this version
+        </Link>
+      )}
     </div>
-  ) : (
-    <></>
   );
   return article ? (
     <div className="mt-5 alert alert-secondary">
@@ -29,9 +66,9 @@ export default function ArticleMeta(props) {
         <br />
         Edit versions: {article.editVersion + 1}
       </div>
-      {editText}
+      {buttons}
     </div>
   ) : (
-    editText
+    buttons
   );
 }

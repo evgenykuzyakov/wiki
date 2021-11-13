@@ -4,17 +4,18 @@ import Article from "../components/Article";
 import EditArticle from "../components/EditArticle";
 
 export default function ArticlePage(props) {
-  let { articleId } = useParams();
+  let { articleId, blockId } = useParams();
   articleId = articleId || "";
+  blockId = blockId ? parseInt(blockId) : null;
   const edit = !!props.edit;
   return (
     <div>
       <div className="container">
         <div className="row mb-3">
           {edit ? (
-            <EditArticle articleId={articleId} />
+            <EditArticle articleId={articleId} blockId={blockId} />
           ) : (
-            <Article articleId={articleId} />
+            <Article articleId={articleId} blockId={blockId} />
           )}
         </div>
       </div>
