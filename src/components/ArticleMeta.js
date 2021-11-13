@@ -8,10 +8,10 @@ export default function ArticleMeta(props) {
   const showEdit = props.showEdit;
   const previewButton = props.previewButton;
   const buttons = (
-    <div className="mt-3">
+    <div>
       {previewButton && (
         <button
-          className="me-2 btn btn-primary"
+          className="me-2 mt-2 btn btn-primary "
           type="button"
           data-bs-toggle="collapse"
           data-bs-target={`#${previewButton}`}
@@ -24,7 +24,7 @@ export default function ArticleMeta(props) {
       {showEdit && !previewButton && (
         <Link
           to={`/edit/${articleId}`}
-          className={`me-2 btn ${
+          className={`me-2 mt-2 btn ${
             article ? "btn-outline-secondary" : "btn-primary"
           }`}
         >
@@ -34,7 +34,7 @@ export default function ArticleMeta(props) {
       {showEdit && previewButton && (
         <Link
           to={`/block/${article.blockHeight}/edit/${articleId}`}
-          className={`me-2 btn btn-outline-secondary`}
+          className={`me-2 mt-2 btn btn-outline-secondary`}
         >
           Edit this version
         </Link>
@@ -42,7 +42,7 @@ export default function ArticleMeta(props) {
       {article && !previewButton && (
         <Link
           to={`/history/${articleId}`}
-          className="me-2 btn btn-outline-secondary"
+          className="me-2 mt-2 btn btn-outline-secondary"
         >
           View edit history
         </Link>
@@ -50,7 +50,7 @@ export default function ArticleMeta(props) {
       {article && previewButton && (
         <Link
           to={`/block/${article.blockHeight}/${articleId}`}
-          className="me-2 btn btn-outline-secondary"
+          className="me-2 mt-2 btn btn-outline-secondary"
         >
           View this version
         </Link>
