@@ -4,9 +4,11 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "./App.scss";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-import { NearConfig, useNear } from "./data/near";
+import { NearConfig, TGas, useNear } from "./data/near";
 import ArticlePage from "./pages/ArticlePage";
 import HistoryPage from "./pages/HistoryPage";
+import { OneNear } from "./data/utils";
+import { useAccount } from "./data/account";
 
 export const refreshAllowanceObj = {};
 
@@ -16,6 +18,7 @@ function App(props) {
   const [signedAccountId, setSignedAccountId] = useState(null);
 
   const _near = useNear();
+  const account = useAccount();
 
   const requestSignIn = useCallback(
     async (e) => {
@@ -39,6 +42,15 @@ function App(props) {
     setSignedIn(false);
     setSignedAccountId(null);
   }, [_near]);
+
+  const donate = async (e) => {
+    e.preventDefault();
+    await account.near.contract.donate(
+      {},
+      TGas.mul(10).toFixed(),
+      OneNear.toFixed()
+    );
+  };
 
   const refreshAllowance = useCallback(async () => {
     alert(
@@ -75,6 +87,10 @@ function App(props) {
     </div>
   ) : signedIn ? (
     <div>
+      <button className="btn btn-outline-light me-2" onClick={donate}>
+        Donate 1 NEAR for storage
+      </button>
+
       <button className="btn btn-outline-light" onClick={() => logOut()}>
         Sign out ({signedAccountId})
       </button>

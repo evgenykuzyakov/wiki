@@ -40,4 +40,12 @@ impl Contract {
             article_ids: UnorderedSet::new(StorageKey::ArticleIds),
         }
     }
+
+    #[payable]
+    pub fn donate(&mut self) {
+        let account_id = env::predecessor_account_id();
+        let mut account = self.internal_get_account_or_default(&account_id);
+        account.near_deposit += env::attached_deposit();
+        self.internal_set_account(&account_id, account);
+    }
 }

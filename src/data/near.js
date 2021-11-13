@@ -99,7 +99,7 @@ async function _initNear() {
       "get_account",
       "get_accounts_paged",
     ],
-    changeMethods: ["post_article"],
+    changeMethods: ["post_article", "donate"],
   });
 
   _near.fetchBlockHash = async () => {
