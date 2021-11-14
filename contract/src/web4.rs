@@ -1,5 +1,4 @@
 use crate::*;
-use regex::Regex;
 use std::collections::HashMap;
 
 const INDEX_BODY: &str = include_str!("../res/index.html");
@@ -70,6 +69,19 @@ impl Web4Response {
 
 const PREFIX_HISTORY: &str = "/history/";
 
+fn filter_string(s: String) -> String {
+    s.chars()
+        .into_iter()
+        .take(250)
+        .filter_map(|c| match c {
+            '\n' => Some(' '),
+            ' ' | '_' | '.' | '-' | ',' | '!' | '(' | ')' => Some(c),
+            _ if c.is_alphanumeric() => Some(c),
+            _ => None,
+        })
+        .collect()
+}
+
 #[near_bindgen]
 impl Contract {
     #[allow(unused_variables)]
@@ -90,9 +102,8 @@ impl Contract {
             .rfind('/')
             .map(|p| path[(p + 1)..].to_string())
             .unwrap_or_default();
-        let re = Regex::new(r"[^\p{L}\p{N} _\-!\.,]+").unwrap();
 
-        let escaped_article_id = re.replace_all(&article_id, "");
+        let escaped_article_id = filter_string(article_id.clone());
 
         let title = if path.starts_with(PREFIX_HISTORY) {
             format!("Edit history of {} | wiki", escaped_article_id)
@@ -103,11 +114,8 @@ impl Contract {
         let article = self.internal_get_article(&article_id);
 
         let description = article
-            .map(|article| article.body.chars().into_iter().take(250).collect())
-            .unwrap_or_else(|| "the wiki built on NEAR".to_string())
-            .replace("\n", " ");
-
-        let description = re.replace_all(&description, "");
+            .map(|article| filter_string(article.body))
+            .unwrap_or_else(|| "the wiki built on NEAR".to_string());
 
         Web4Response::html_response(
             INDEX_BODY
