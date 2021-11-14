@@ -14,11 +14,23 @@ export default function ArticleMeta(props) {
           className="me-2 mt-2 btn btn-primary "
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target={`#${previewButton}`}
+          data-bs-target={`#a-${previewButton}`}
           aria-expanded="false"
-          aria-controls={previewButton}
+          aria-controls={`a-${previewButton}`}
         >
           Toggle article preview
+        </button>
+      )}
+      {previewButton && (
+        <button
+          className="me-2 mt-2 btn btn-primary "
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target={`#d-${previewButton}`}
+          aria-expanded="false"
+          aria-controls={`d-${previewButton}`}
+        >
+          Toggle diff
         </button>
       )}
       {showEdit && !previewButton && (

@@ -5,6 +5,7 @@ import gfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import ArticleMeta from "./ArticleMeta";
 import { useAccount } from "../data/account";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 
 export default function ArticleHistory(props) {
   const articleId = props.articleId;
@@ -53,8 +54,10 @@ export default function ArticleHistory(props) {
   ) : (
     <div>
       <h1>Edit History</h1>
-      {articleHistory.map((article) => {
-        const key = `a-${article.blockHeight}-${articleId}`;
+      {articleHistory.map((article, i) => {
+        const key = `${article.blockHeight}-${articleId}`;
+        const prevBody =
+          i + 1 < articleHistory.length ? articleHistory[i + 1].body : "";
         return (
           <div key={key}>
             <ArticleMeta
@@ -64,10 +67,18 @@ export default function ArticleHistory(props) {
               previewButton={key}
             />
 
-            <div className="collapse" id={key}>
+            <div className="collapse" id={`a-${key}`}>
               <div className="article">
                 <ReactMarkdown plugins={[gfm]}>{article.body}</ReactMarkdown>
               </div>
+            </div>
+            <div className="collapse show" id={`d-${key}`}>
+              <ReactDiffViewer
+                oldValue={prevBody}
+                newValue={article.body}
+                splitView={false}
+                compareMethod={DiffMethod.SENTENCES}
+              />
             </div>
           </div>
         );

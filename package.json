@@ -23,6 +23,7 @@
     "react-chartjs-2": "^3.0.3",
     "react-compound-timer": "^1.2.0",
     "react-datepicker": "^4.1.1",
+    "react-diff-viewer": "^3.1.1",
     "react-dom": "^16.13.1",
     "react-infinite-scroller": "^1.2.4",
     "react-markdown": "^7.1.0",
