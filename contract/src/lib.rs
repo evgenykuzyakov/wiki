@@ -1,6 +1,7 @@
 mod account;
 mod article;
 mod util;
+mod web4;
 
 pub use account::*;
 pub use article::*;
@@ -9,7 +10,7 @@ use util::*;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedMap, UnorderedSet};
 use near_sdk::json_types::ValidAccountId;
-use near_sdk::serde::Serialize;
+use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, near_bindgen, AccountId, Balance, BorshStorageKey, PanicOnDefault};
 
 near_sdk::setup_alloc!();
