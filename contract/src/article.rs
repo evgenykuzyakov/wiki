@@ -68,11 +68,13 @@ impl Article {
 
 impl Contract {
     pub fn internal_get_article(&self, article_id: &ArticleId) -> Option<Article> {
-        self.articles.get(&article_id).map(|a| a.into())
+        self.articles.get(article_id).map(|a| a.into())
     }
 
     pub fn internal_set_article(&mut self, article_id: &ArticleId, article: Article) {
-        self.articles.insert(&article_id, &article.into());
+        if self.articles.insert(article_id, &article.into()).is_none() {
+            self.article_ids.insert(article_id);
+        }
     }
 }
 
@@ -106,6 +108,10 @@ impl Contract {
         account.add_article(&article_id, article.get_article_bytes());
         self.internal_set_account(&article.author, account);
         self.internal_set_article(&article_id, article);
+    }
+
+    pub fn get_num_articles(&self) -> u64 {
+        self.article_ids.len()
     }
 
     pub fn get_article(&self, article_id: ArticleId) -> Option<Article> {

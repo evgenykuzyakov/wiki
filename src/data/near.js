@@ -94,8 +94,10 @@ async function _initNear() {
 
   _near.contract = wrapContract(_near.account, NearConfig.contractName, {
     viewMethods: [
+      "get_num_articles",
       "get_article",
       "get_article_ids_paged",
+      "get_num_accounts",
       "get_account",
       "get_accounts_paged",
     ],

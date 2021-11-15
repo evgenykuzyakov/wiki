@@ -89,7 +89,7 @@ impl Contract {
         let path = request.path.expect("Path expected");
         if path.starts_with("/static/") || path == "/favicon.png" || path == "/manifest.json" {
             return Web4Response::body_url(
-                String::from("ipfs://bafybeigp72pmdzminfutkp6h7zqdin6z24fhehq7umo26etxq3jn3oehyy")
+                String::from("ipfs://bafybeigifbsj3nnbufxa3non7xas23r3yqjlfx3v3k27qgdgch2mmqdeue")
                     + &path,
             );
         }

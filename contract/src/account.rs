@@ -80,6 +80,10 @@ impl Contract {
 
 #[near_bindgen]
 impl Contract {
+    pub fn get_num_accounts(&self) -> u64 {
+        self.accounts.len()
+    }
+
     pub fn get_account(&self, account_id: ValidAccountId) -> Option<Account> {
         self.internal_get_account(account_id.as_ref())
     }

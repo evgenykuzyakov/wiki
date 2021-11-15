@@ -9,6 +9,7 @@ import ArticlePage from "./pages/ArticlePage";
 import HistoryPage from "./pages/HistoryPage";
 import { OneNear } from "./data/utils";
 import { useAccount } from "./data/account";
+import RecentPage from "./pages/RecentPage";
 
 export const refreshAllowanceObj = {};
 
@@ -141,6 +142,11 @@ function App(props) {
                     Main
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" aria-current="page" to="/recent/">
+                    Recent articles
+                  </Link>
+                </li>
               </ul>
               <form className="d-flex">{header}</form>
             </div>
@@ -148,6 +154,9 @@ function App(props) {
         </nav>
 
         <Switch>
+          <Route path={"/recent/"}>
+            <RecentPage {...passProps} />
+          </Route>
           <Route path={"/block/:blockId/edit/:articleId?"}>
             <ArticlePage {...passProps} edit />
           </Route>
