@@ -84,8 +84,8 @@ impl Contract {
         self.accounts.len()
     }
 
-    pub fn get_account(&self, account_id: ValidAccountId) -> Option<Account> {
-        self.internal_get_account(account_id.as_ref())
+    pub fn get_account(&self, account_id: AccountId) -> Option<Account> {
+        self.internal_get_account(&account_id)
     }
 
     pub fn get_accounts_paged(

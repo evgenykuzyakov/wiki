@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useArticle } from "../data/article";
-import { Loading } from "../data/utils";
+import { useArticle } from "../../data/article";
+import { Loading } from "../../data/utils";
 import gfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import ArticleMeta from "./ArticleMeta";

@@ -1,5 +1,5 @@
 import React from "react";
-import RecentArticles from "../components/RecentArticles";
+import RecentArticles from "../components/Article/RecentArticles";
 
 export default function RecentPage(props) {
   return (

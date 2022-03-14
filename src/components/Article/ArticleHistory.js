@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { articleFetcher, useArticle } from "../data/article";
-import { Loading } from "../data/utils";
+import { articleFetcher, useArticle } from "../../data/article";
+import { Loading } from "../../data/utils";
 import gfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import ArticleMeta from "./ArticleMeta";
-import { useAccount } from "../data/account";
+import { useAccount } from "../../data/account";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 
 export default function ArticleHistory(props) {

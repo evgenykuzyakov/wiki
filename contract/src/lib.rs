@@ -1,5 +1,6 @@
 mod account;
 mod article;
+mod event;
 mod util;
 mod web4;
 
@@ -9,11 +10,8 @@ use util::*;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedMap, UnorderedSet};
-use near_sdk::json_types::ValidAccountId;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, near_bindgen, AccountId, Balance, BorshStorageKey, PanicOnDefault};
-
-near_sdk::setup_alloc!();
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKey {

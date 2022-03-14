@@ -1,6 +1,7 @@
 import React from "react";
-import { displayTime } from "../data/utils";
+import { displayTime } from "../../data/utils";
 import { Link } from "react-router-dom";
+import SocialAccount from "../SocialAccount/SocialAccount";
 
 export default function ArticleMeta(props) {
   const articleId = props.articleId;
@@ -72,7 +73,7 @@ export default function ArticleMeta(props) {
   return article ? (
     <div className="mt-5 alert alert-secondary">
       <div>
-        Last edit by {article.author}
+        Last edit by <SocialAccount accountId={article.author} clickable />
         <br />
         Edited on {displayTime(new Date(article.timestamp))}
         <br />

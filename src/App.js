@@ -4,12 +4,13 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "./App.scss";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-import { NearConfig, TGas, useNear } from "./data/near";
+import { NearConfig, TGas, useNearPromise } from "./data/near";
 import ArticlePage from "./pages/ArticlePage";
 import HistoryPage from "./pages/HistoryPage";
 import { OneNear } from "./data/utils";
 import { useAccount } from "./data/account";
 import RecentPage from "./pages/RecentPage";
+import SocialAccount from "./components/SocialAccount/SocialAccount";
 
 export const refreshAllowanceObj = {};
 
@@ -18,7 +19,7 @@ function App(props) {
   const [signedIn, setSignedIn] = useState(false);
   const [signedAccountId, setSignedAccountId] = useState(null);
 
-  const _near = useNear();
+  const _near = useNearPromise();
   const account = useAccount();
 
   const requestSignIn = useCallback(
@@ -93,7 +94,7 @@ function App(props) {
       </button>
 
       <button className="btn btn-outline-light" onClick={() => logOut()}>
-        Sign out ({signedAccountId})
+        Sign out <SocialAccount accountId={signedAccountId} />
       </button>
     </div>
   ) : (

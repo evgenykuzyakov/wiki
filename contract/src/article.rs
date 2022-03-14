@@ -55,7 +55,7 @@ impl Article {
             version: CURRENT_VERSION,
             edit_version,
             timestamp: env::block_timestamp(),
-            block_height: env::block_index(),
+            block_height: env::block_height(),
             author,
             body,
         }
@@ -88,7 +88,7 @@ impl Contract {
         let edit_version = if let Some(previous_article) = self.internal_get_article(&article_id) {
             assert_ne!(
                 previous_article.block_height,
-                env::block_index(),
+                env::block_height(),
                 "Can't edit the article twice in one block"
             );
             let article_bytes = previous_article.get_article_bytes();
@@ -107,6 +107,7 @@ impl Contract {
         let article = Article::new(edit_version, body, account_id);
         account.add_article(&article_id, article.get_article_bytes());
         self.internal_set_account(&article.author, account);
+        event::emit::post_article(&article_id, &article);
         self.internal_set_article(&article_id, article);
     }
 

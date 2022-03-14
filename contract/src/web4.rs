@@ -1,4 +1,5 @@
 use crate::*;
+use near_sdk::json_types::Base64VecU8;
 use std::collections::HashMap;
 
 const INDEX_BODY: &str = include_str!("../res/index.html");
@@ -8,7 +9,7 @@ const INDEX_BODY: &str = include_str!("../res/index.html");
 #[serde(crate = "near_sdk::serde")]
 pub struct Web4Request {
     #[serde(rename = "accountId")]
-    account_id: Option<ValidAccountId>,
+    account_id: Option<AccountId>,
     path: Option<String>,
     params: Option<HashMap<String, String>>,
     query: Option<HashMap<String, Vec<String>>>,
@@ -21,7 +22,7 @@ pub struct Web4Response {
     #[serde(rename = "contentType")]
     content_type: Option<String>,
     status: Option<u32>,
-    body: Option<Vec<u8>>,
+    body: Option<Base64VecU8>,
     #[serde(rename = "bodyUrl")]
     body_url: Option<String>,
     #[serde(rename = "preloadUrls")]
@@ -32,7 +33,7 @@ impl Web4Response {
     pub fn html_response(text: String) -> Self {
         Self {
             content_type: Some(String::from("text/html; charset=UTF-8")),
-            body: Some(text.into_bytes()),
+            body: Some(text.into_bytes().into()),
             ..Default::default()
         }
     }
@@ -40,7 +41,7 @@ impl Web4Response {
     pub fn plain_response(text: String) -> Self {
         Self {
             content_type: Some(String::from("text/plain; charset=UTF-8")),
-            body: Some(text.into_bytes()),
+            body: Some(text.into_bytes().into()),
             ..Default::default()
         }
     }
@@ -89,7 +90,7 @@ impl Contract {
         let path = request.path.expect("Path expected");
         if path.starts_with("/static/") || path == "/favicon.png" || path == "/manifest.json" {
             return Web4Response::body_url(
-                String::from("ipfs://bafybeigifbsj3nnbufxa3non7xas23r3yqjlfx3v3k27qgdgch2mmqdeue")
+                String::from("ipfs://bafybeidut5ykpfnfrdb22uks7k5aazyulh2fpjfgygayy4viunhv2rtpqa")
                     + &path,
             );
         }

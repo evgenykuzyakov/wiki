@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useArticle } from "../data/article";
+import { useArticle } from "../../data/article";
 import ArticleMeta from "./ArticleMeta";
-import { useAccount } from "../data/account";
-import { Loading } from "../data/utils";
-import { TGas } from "../data/near";
+import { useAccount } from "../../data/account";
+import { Loading } from "../../data/utils";
+import { TGas } from "../../data/near";
 import Editor from "react-markdown-editor-lite";
 import ReactMarkdown from "react-markdown";
 import "react-markdown-editor-lite/lib/index.css";
@@ -105,7 +105,7 @@ export default function EditArticle(props) {
           View article
         </a>
       </div>
-      <ArticleMeta article={article} />
+      <ArticleMeta article={article} articleId={articleId} />
     </div>
   );
 }

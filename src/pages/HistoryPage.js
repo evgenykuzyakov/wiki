@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import ArticleHistory from "../components/ArticleHistory";
+import ArticleHistory from "../components/Article/ArticleHistory";
 
 export default function HistoryPage(props) {
   let { articleId } = useParams();

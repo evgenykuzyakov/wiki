@@ -1,6 +1,6 @@
 import { singletonHook } from "react-singleton-hook";
 import { useEffect, useState } from "react";
-import { useNear } from "./near";
+import { useNearPromise } from "./near";
 import { keysToCamel } from "./utils";
 
 const defaultAccount = {
@@ -35,7 +35,7 @@ const loadAccount = async (near, setAccount) => {
 
 export const useAccount = singletonHook(defaultAccount, () => {
   const [account, setAccount] = useState(defaultAccount);
-  const _near = useNear();
+  const _near = useNearPromise();
 
   useEffect(() => {
     _near.then(async (near) => {

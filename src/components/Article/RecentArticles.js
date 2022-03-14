@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Loading } from "../data/utils";
-import { useAccount } from "../data/account";
-import { LsKey } from "../data/near";
+import { Loading } from "../../data/utils";
+import { useAccount } from "../../data/account";
+import { LsKey } from "../../data/near";
 import ls from "local-storage";
 import { Link } from "react-router-dom";
 

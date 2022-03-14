@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import Article from "../components/Article";
-import EditArticle from "../components/EditArticle";
+import Article from "../components/Article/Article";
+import EditArticle from "../components/Article/EditArticle";
 
 export default function ArticlePage(props) {
   let { articleId, blockId } = useParams();
