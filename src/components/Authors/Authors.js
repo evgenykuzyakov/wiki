@@ -30,7 +30,7 @@ const fetchAccounts = async (offset, near) => {
   return accounts;
 };
 
-export default function RecentAuthors(props) {
+export default function Authors(props) {
   const near = useNear();
 
   const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function RecentAuthors(props) {
   const [sortedAccounts, setSortedAccounts] = useState([]);
 
   useEffect(() => {
-    document.title = "Accounts | wiki";
+    document.title = "Authors | wiki";
   }, []);
 
   useEffect(() => {

@@ -29,7 +29,7 @@ const fetchArticleIds = async (offset, account) => {
   return articleIds;
 };
 
-export default function RecentArticles(props) {
+export default function Articles(props) {
   const account = useAccount();
 
   const [loading, setLoading] = useState(true);
@@ -38,7 +38,7 @@ export default function RecentArticles(props) {
   const [articleIds, setArticleIds] = useState([]);
 
   useEffect(() => {
-    document.title = "Recent articles | wiki";
+    document.title = "Articles | wiki";
   }, []);
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import ArticlePage from "./pages/ArticlePage";
 import HistoryPage from "./pages/HistoryPage";
 import { OneNear } from "./data/utils";
 import { useAccount } from "./data/account";
-import RecentPage from "./pages/RecentPage";
+import ArticlesPage from "./pages/ArticlesPage";
 import SocialAccount from "./components/SocialAccount/SocialAccount";
 import AuthorsPage from "./pages/AuthorsPage";
 import AuthorPage from "./pages/AuthorPage";
@@ -146,8 +146,12 @@ function App(props) {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" aria-current="page" to="/recent/">
-                    Recent articles
+                  <Link
+                    className="nav-link"
+                    aria-current="page"
+                    to="/articles/"
+                  >
+                    Articles
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -162,8 +166,11 @@ function App(props) {
         </nav>
 
         <Switch>
+          <Route path={"/articles/"}>
+            <ArticlesPage {...passProps} />
+          </Route>
           <Route path={"/recent/"}>
-            <RecentPage {...passProps} />
+            <ArticlesPage {...passProps} />
           </Route>
           <Route path={"/authors/"}>
             <AuthorsPage {...passProps} />

@@ -1,12 +1,12 @@
 import React from "react";
-import RecentArticles from "../components/Article/RecentArticles";
+import Articles from "../components/Article/Articles";
 
-export default function RecentPage(props) {
+export default function ArticlesPage(props) {
   return (
     <div>
       <div className="container">
         <div className="row mb-3">
-          <RecentArticles />
+          <Articles />
         </div>
       </div>
     </div>

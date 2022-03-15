@@ -4,6 +4,8 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 const INDEX_BODY: &str = include_str!("../res/index.html");
+const DEFAULT_TITLE: &str = "The wiki";
+const DEFAULT_DESCRIPTION: &str = "the wiki built on NEAR";
 
 #[allow(dead_code)]
 #[derive(Deserialize)]
@@ -89,15 +91,29 @@ impl Contract {
     #[allow(unused_variables)]
     pub fn web4_get(&self, request: Web4Request) -> Web4Response {
         let path = request.path.expect("Path expected");
-        if path.starts_with("/static/")
-            || path == "/favicon.png"
-            || path == "/manifest.json"
-            || path == "/recent/"
-            || path == "/authors/"
-        {
+        if path.starts_with("/static/") || path == "/favicon.png" || path == "/manifest.json" {
             return Web4Response::body_url(
-                String::from("ipfs://bafybeigzswtx6rlfbsurhiqv333xued52jnzbqvmpdu5ehtbyel5bz2k34")
+                String::from("ipfs://bafybeiefq53c5prsszsfnhoyffss5rarxrsgu4ciwusecfqo6kgo43jlsu")
                     + &path,
+            );
+        }
+
+        if path == "/articles/" || path == "/recent/" {
+            return Web4Response::html_response(
+                INDEX_BODY
+                    .replace(DEFAULT_TITLE, "Articles | wiki")
+                    .replace(
+                        DEFAULT_DESCRIPTION,
+                        "The list of all articles on the wiki built on NEAR",
+                    ),
+            );
+        }
+        if path == "/authors/" {
+            return Web4Response::html_response(
+                INDEX_BODY.replace(DEFAULT_TITLE, "Authors | wiki").replace(
+                    DEFAULT_DESCRIPTION,
+                    "The list of all authors contributed to the wiki built on NEAR",
+                ),
             );
         }
 
@@ -112,8 +128,8 @@ impl Contract {
 
             return Web4Response::html_response(
                 INDEX_BODY
-                    .replace("The wiki", &title)
-                    .replace("the wiki built on NEAR", &description),
+                    .replace(DEFAULT_TITLE, &title)
+                    .replace(DEFAULT_DESCRIPTION, &description),
             );
         }
 
@@ -134,12 +150,12 @@ impl Contract {
 
         let description = article
             .map(|article| filter_string(article.body))
-            .unwrap_or_else(|| "the wiki built on NEAR".to_string());
+            .unwrap_or_else(|| DEFAULT_DESCRIPTION.to_string());
 
         Web4Response::html_response(
             INDEX_BODY
-                .replace("The wiki", &title)
-                .replace("the wiki built on NEAR", &description),
+                .replace(DEFAULT_TITLE, &title)
+                .replace(DEFAULT_DESCRIPTION, &description),
         )
     }
 }

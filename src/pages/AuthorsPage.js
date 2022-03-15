@@ -1,12 +1,12 @@
 import React from "react";
-import RecentAuthors from "../components/Authors/RecentAuthors";
+import Authors from "../components/Authors/Authors";
 
 export default function AuthorsPage(props) {
   return (
     <div>
       <div className="container">
         <div className="row mb-3">
-          <RecentAuthors />
+          <Authors />
         </div>
       </div>
     </div>
