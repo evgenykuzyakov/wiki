@@ -11,9 +11,7 @@ export default function SocialAccount(props) {
   const displayName = socialAccount?.displayName
     ? `${socialAccount.displayName} (${accountId})`
     : accountId;
-  const accountUrl = socialAccount
-    ? `https://near.social/@${accountId.slice(0, -5)}`
-    : "/near.social";
+  const accountUrl = `/author/${accountId}`;
   const inner = (
     <div className="social-account">
       <img src={avatarUrl} title={accountId} alt={accountId} />

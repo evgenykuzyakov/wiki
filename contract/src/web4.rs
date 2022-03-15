@@ -1,6 +1,7 @@
 use crate::*;
 use near_sdk::json_types::Base64VecU8;
 use std::collections::HashMap;
+use std::str::FromStr;
 
 const INDEX_BODY: &str = include_str!("../res/index.html");
 
@@ -88,15 +89,32 @@ impl Contract {
     #[allow(unused_variables)]
     pub fn web4_get(&self, request: Web4Request) -> Web4Response {
         let path = request.path.expect("Path expected");
-        if path.starts_with("/static/") || path == "/favicon.png" || path == "/manifest.json" {
+        if path.starts_with("/static/")
+            || path == "/favicon.png"
+            || path == "/manifest.json"
+            || path == "/recent/"
+            || path == "/authors/"
+        {
             return Web4Response::body_url(
-                String::from("ipfs://bafybeidut5ykpfnfrdb22uks7k5aazyulh2fpjfgygayy4viunhv2rtpqa")
+                String::from("ipfs://bafybeigzswtx6rlfbsurhiqv333xued52jnzbqvmpdu5ehtbyel5bz2k34")
                     + &path,
             );
         }
 
         if path == "/robots.txt" {
             return Web4Response::plain_response("User-agent: *\nDisallow:".to_string());
+        }
+
+        if path.starts_with("/author/") {
+            let account_id = AccountId::from_str(&path[8..]).expect("Non valid account ID");
+            let title = format!("Author {} | wiki", account_id);
+            let description = format!("Articles written by {}", account_id);
+
+            return Web4Response::html_response(
+                INDEX_BODY
+                    .replace("The wiki", &title)
+                    .replace("the wiki built on NEAR", &description),
+            );
         }
 
         let article_id = path

@@ -11,6 +11,8 @@ import { OneNear } from "./data/utils";
 import { useAccount } from "./data/account";
 import RecentPage from "./pages/RecentPage";
 import SocialAccount from "./components/SocialAccount/SocialAccount";
+import AuthorsPage from "./pages/AuthorsPage";
+import AuthorPage from "./pages/AuthorPage";
 
 export const refreshAllowanceObj = {};
 
@@ -148,6 +150,11 @@ function App(props) {
                     Recent articles
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" aria-current="page" to="/authors/">
+                    Authors
+                  </Link>
+                </li>
               </ul>
               <form className="d-flex">{header}</form>
             </div>
@@ -157,6 +164,12 @@ function App(props) {
         <Switch>
           <Route path={"/recent/"}>
             <RecentPage {...passProps} />
+          </Route>
+          <Route path={"/authors/"}>
+            <AuthorsPage {...passProps} />
+          </Route>
+          <Route path={"/author/:accountId"}>
+            <AuthorPage {...passProps} />
           </Route>
           <Route path={"/block/:blockId/edit/:articleId?"}>
             <ArticlePage {...passProps} edit />
