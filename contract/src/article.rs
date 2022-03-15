@@ -85,6 +85,7 @@ impl Contract {
         let account_id = env::predecessor_account_id();
         let mut account = self.internal_get_account_or_default(&account_id);
         account.near_deposit += env::attached_deposit();
+        let mut previous_author = None;
         let edit_version = if let Some(previous_article) = self.internal_get_article(&article_id) {
             assert_ne!(
                 previous_article.block_height,
@@ -100,6 +101,7 @@ impl Contract {
                 previous_author.remove_article(&article_id, article_bytes);
                 self.internal_set_account(&previous_article.author, previous_author);
             }
+            previous_author = Some(previous_article.author);
             previous_article.edit_version + 1
         } else {
             0
@@ -107,7 +109,7 @@ impl Contract {
         let article = Article::new(edit_version, body, account_id);
         account.add_article(&article_id, article.get_article_bytes());
         self.internal_set_account(&article.author, account);
-        event::emit::post_article(&article_id, &article);
+        event::emit::post_article(&article_id, &article, &previous_author);
         self.internal_set_article(&article_id, article);
     }
 
