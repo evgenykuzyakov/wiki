@@ -29,12 +29,20 @@ pub mod emit {
         log!("EVENT_JSON:{}", event.to_string());
 
         let message = if let Some(previous_author) = previous_author.as_ref() {
-            format!(
-                "Article https://thewiki.near.page/{} by {} was updated by {}",
-                article_id,
-                account_to_mention(previous_author),
-                account_to_mention(&article.author),
-            )
+            if previous_author == &article.author {
+                format!(
+                    "Article https://thewiki.near.page/{} was updated by {}",
+                    article_id,
+                    account_to_mention(&article.author),
+                )
+            } else {
+                format!(
+                    "Article https://thewiki.near.page/{} previously edited by {} was updated by {}",
+                    article_id,
+                    account_to_mention(previous_author),
+                    account_to_mention(&article.author),
+                )
+            }
         } else {
             format!(
                 "New article https://thewiki.near.page/{} was created by {}",
