@@ -85,15 +85,15 @@ impl Contract {
         let account_id = env::predecessor_account_id();
         let mut account = self.internal_get_account_or_default(&account_id);
         account.near_deposit += env::attached_deposit();
-        let mut previous_author = None;
-        let edit_version = if let Some(previous_article) = self.internal_get_article(&article_id) {
+        let previous_article = self.internal_get_article(&article_id);
+        let edit_version = if let Some(previous_article) = previous_article.as_ref() {
             assert_ne!(
                 previous_article.block_height,
                 env::block_height(),
                 "Can't edit the article twice in one block"
             );
             let article_bytes = previous_article.get_article_bytes();
-            if previous_article.author == account_id {
+            if &previous_article.author == &account_id {
                 account.remove_article(&article_id, article_bytes);
             } else {
                 let mut previous_author =
@@ -101,7 +101,6 @@ impl Contract {
                 previous_author.remove_article(&article_id, article_bytes);
                 self.internal_set_account(&previous_article.author, previous_author);
             }
-            previous_author = Some(previous_article.author);
             previous_article.edit_version + 1
         } else {
             0
@@ -109,7 +108,7 @@ impl Contract {
         let article = Article::new(edit_version, body, account_id);
         account.add_article(&article_id, article.get_article_bytes());
         self.internal_set_account(&article.author, account);
-        event::emit::post_article(&article_id, &article, &previous_author);
+        event::emit::post_article(&article_id, &article, &previous_article);
         self.internal_set_article(&article_id, article);
     }
 
