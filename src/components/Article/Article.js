@@ -9,6 +9,10 @@ export default function Article(props) {
   const articleId = props.articleId;
   const blockId = props.blockId;
   const { article } = useArticle(articleId, blockId);
+  const { article: articleNavigation } = useArticle(
+    article?.navigationId,
+    blockId
+  );
 
   const [loading, setLoading] = useState(true);
 
@@ -27,8 +31,17 @@ export default function Article(props) {
   ) : (
     <div>
       {article ? (
-        <div className="article">
-          <ReactMarkdown plugins={[gfm]}>{article.body}</ReactMarkdown>
+        <div className="row justify-content-md-center">
+          {articleNavigation && (
+            <div className="article-navigation col-3">
+              <ReactMarkdown plugins={[gfm]}>
+                {articleNavigation.body}
+              </ReactMarkdown>
+            </div>
+          )}
+          <div className="article col">
+            <ReactMarkdown plugins={[gfm]}>{article.body}</ReactMarkdown>
+          </div>
         </div>
       ) : (
         "Article doesn't exists"

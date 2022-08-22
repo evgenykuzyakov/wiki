@@ -14,6 +14,7 @@ const defaultBody = (articleId) => `# ${articleId}
 *write the content of the article here*
 
 `;
+const defaultNavigationId = (articleId) => `${articleId}_nav`;
 
 export default function EditArticle(props) {
   const mdEditor = React.useRef(null);
@@ -25,6 +26,7 @@ export default function EditArticle(props) {
 
   const [loading, setLoading] = useState(true);
 
+  const [navigationId, setNavigationId] = useState(null);
   const [body, setBody] = useState(null);
 
   useEffect(() => {
@@ -36,6 +38,7 @@ export default function EditArticle(props) {
   useEffect(() => {
     if (body === null && (article || article === false)) {
       setBody(article ? article.body : defaultBody(articleId));
+      setNavigationId(article?.navigationId);
 
       setLoading(false);
     }
@@ -48,12 +51,14 @@ export default function EditArticle(props) {
       {
         article_id: articleId,
         body,
+        navigation_id: navigationId !== "" ? navigationId : null,
       },
       TGas.mul(75).toFixed()
     );
 
     const newArticle = {
       body,
+      navigationId,
       timestamp: new Date().getTime(),
       author: account.accountId,
       editVersion: article ? article.editVersion + 1 : 0,
@@ -85,6 +90,23 @@ export default function EditArticle(props) {
             <ReactMarkdown plugins={[gfm]}>{text}</ReactMarkdown>
           )}
         />
+      </div>
+      <div className="mb-3 row justify-content-md-center">
+        <div className="col-auto">
+          <label className="col-form-label" htmlFor="navigationId">
+            Article ID for navigation menu (optional):
+          </label>
+        </div>
+        <div className="col">
+          <input
+            className="form-control"
+            type="text"
+            id="navigationId"
+            placeholder={defaultNavigationId(articleId)}
+            value={navigationId || ""}
+            onChange={(e) => setNavigationId(e.target.value)}
+          />
+        </div>
       </div>
       <div className="mb-3">
         <button

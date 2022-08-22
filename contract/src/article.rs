@@ -1,10 +1,31 @@
 use crate::*;
 use near_sdk::{BlockHeight, StorageUsage, Timestamp};
 
-const CURRENT_VERSION: u32 = 0;
+const VERSION_0: u32 = 0;
+// Added navigation_id.
+const CURRENT_VERSION: u32 = 1;
 
 pub type ArticleId = String;
 pub type ArticleBody = String;
+
+#[derive(BorshSerialize, BorshDeserialize)]
+pub struct ArticleV0 {
+    /// When a contract is upgraded, the front-end needs to know which version it retrieves.
+    /// The value is not stored on chain, but instead populated by the contract code.
+    #[borsh_skip]
+    pub version: u32,
+
+    /// The number of edits of this article.
+    pub edit_version: u32,
+
+    pub timestamp: Timestamp,
+
+    pub block_height: BlockHeight,
+
+    pub author: AccountId,
+
+    pub body: ArticleBody,
+}
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -25,16 +46,45 @@ pub struct Article {
     pub author: AccountId,
 
     pub body: ArticleBody,
+
+    pub navigation_id: Option<ArticleId>,
+}
+
+impl From<ArticleV0> for Article {
+    fn from(a: ArticleV0) -> Self {
+        let ArticleV0 {
+            version,
+            edit_version,
+            timestamp,
+            block_height,
+            author,
+            body,
+        } = a;
+        Self {
+            version,
+            edit_version,
+            timestamp,
+            block_height,
+            author,
+            body,
+            navigation_id: None,
+        }
+    }
 }
 
 #[derive(BorshSerialize, BorshDeserialize)]
 pub enum VArticle {
+    V0(ArticleV0),
     Current(Article),
 }
 
 impl From<VArticle> for Article {
     fn from(v: VArticle) -> Self {
         match v {
+            VArticle::V0(mut a) => {
+                a.version = VERSION_0;
+                a.into()
+            }
             VArticle::Current(mut c) => {
                 c.version = CURRENT_VERSION;
                 c
@@ -50,7 +100,12 @@ impl From<Article> for VArticle {
 }
 
 impl Article {
-    pub fn new(edit_version: u32, body: ArticleBody, author: AccountId) -> Self {
+    pub fn new(
+        edit_version: u32,
+        body: ArticleBody,
+        author: AccountId,
+        navigation_id: Option<ArticleId>,
+    ) -> Self {
         Self {
             version: CURRENT_VERSION,
             edit_version,
@@ -58,11 +113,13 @@ impl Article {
             block_height: env::block_height(),
             author,
             body,
+            navigation_id,
         }
     }
 
     pub fn get_article_bytes(&self) -> StorageUsage {
-        self.body.len() as _
+        self.body.len() as StorageUsage
+            + self.navigation_id.as_ref().map(|a| a.len()).unwrap_or(0) as StorageUsage
     }
 }
 
@@ -81,7 +138,12 @@ impl Contract {
 #[near_bindgen]
 impl Contract {
     #[payable]
-    pub fn post_article(&mut self, article_id: ArticleId, body: ArticleBody) {
+    pub fn post_article(
+        &mut self,
+        article_id: ArticleId,
+        body: ArticleBody,
+        navigation_id: Option<ArticleId>,
+    ) {
         let account_id = env::predecessor_account_id();
         let mut account = self.internal_get_account_or_default(&account_id);
         account.near_deposit += env::attached_deposit();
@@ -105,7 +167,7 @@ impl Contract {
         } else {
             0
         };
-        let article = Article::new(edit_version, body, account_id);
+        let article = Article::new(edit_version, body, account_id, navigation_id);
         account.add_article(&article_id, article.get_article_bytes());
         self.internal_set_account(&article.author, account);
         event::emit::post_article(&article_id, &article, &previous_article);
@@ -129,7 +191,7 @@ impl Contract {
         let keys = self.article_ids.as_vector();
         let from_index = from_index.unwrap_or(0);
         let limit = limit.unwrap_or(keys.len());
-        (from_index..std::cmp::min(keys.len(), limit))
+        (from_index..std::cmp::min(keys.len(), from_index + limit))
             .filter_map(|index| keys.get(index))
             .collect()
     }
