@@ -33,7 +33,7 @@ export default function Article(props) {
       {article ? (
         <div className="row justify-content-md-center">
           {articleNavigation && (
-            <div className="article-navigation col-3">
+            <div className="article-navigation col-md-3">
               <ReactMarkdown plugins={[gfm]}>
                 {articleNavigation.body}
               </ReactMarkdown>
