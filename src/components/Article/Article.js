@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useArticle } from "../../data/article";
 import { Loading } from "../../data/utils";
-import gfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
 import ArticleMeta from "./ArticleMeta";
+import { Markdown } from "./Markdown";
 
 export default function Article(props) {
   const articleId = props.articleId;
@@ -34,14 +33,10 @@ export default function Article(props) {
         <div className="row justify-content-md-center">
           {articleNavigation && (
             <div className="article-navigation col-md-3">
-              <ReactMarkdown plugins={[gfm]}>
-                {articleNavigation.body}
-              </ReactMarkdown>
+              {Markdown(articleNavigation.body)}
             </div>
           )}
-          <div className="article col">
-            <ReactMarkdown plugins={[gfm]}>{article.body}</ReactMarkdown>
-          </div>
+          <div className="article col">{Markdown(article.body)}</div>
         </div>
       ) : (
         "Article doesn't exists"

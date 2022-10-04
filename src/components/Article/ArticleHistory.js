@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { articleFetcher, useArticle } from "../../data/article";
 import { Loading } from "../../data/utils";
-import gfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
 import ArticleMeta from "./ArticleMeta";
 import { useAccount } from "../../data/account";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+import { Markdown } from "./Markdown";
 
 export default function ArticleHistory(props) {
   const articleId = props.articleId;
@@ -68,9 +67,7 @@ export default function ArticleHistory(props) {
             />
 
             <div className="collapse" id={`a-${key}`}>
-              <div className="article">
-                <ReactMarkdown plugins={[gfm]}>{article.body}</ReactMarkdown>
-              </div>
+              <div className="article">{Markdown(article.body)}</div>
             </div>
             <div className="collapse show" id={`d-${key}`}>
               <ReactDiffViewer

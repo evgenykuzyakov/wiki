@@ -5,9 +5,8 @@ import { useAccount } from "../../data/account";
 import { Loading } from "../../data/utils";
 import { TGas } from "../../data/near";
 import Editor from "react-markdown-editor-lite";
-import ReactMarkdown from "react-markdown";
 import "react-markdown-editor-lite/lib/index.css";
-import gfm from "remark-gfm";
+import { Markdown } from "./Markdown";
 
 const defaultBody = (articleId) => `# ${articleId}
 
@@ -85,10 +84,9 @@ export default function EditArticle(props) {
           style={{
             height: "30em",
           }}
+          htmlClass="article"
           onChange={({ text }) => setBody(text)}
-          renderHTML={(text) => (
-            <ReactMarkdown plugins={[gfm]}>{text}</ReactMarkdown>
-          )}
+          renderHTML={Markdown}
         />
       </div>
       <div className="mb-3 row justify-content-md-center">

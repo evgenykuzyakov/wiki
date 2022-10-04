@@ -7,4 +7,4 @@ curl -X 'POST' \
   -H 'Content-Type: application/vnd.ipld.car' \
   --data-binary '@/tmp/build.car' \
   -H "Authorization: Bearer $WEB3STORAGE_TOKEN"
-  ```
+```
