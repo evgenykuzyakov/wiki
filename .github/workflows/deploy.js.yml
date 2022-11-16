@@ -1,0 +1,24 @@
+name: Deploy using web4
+
+concurrency: production
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'yarn'
+    - run: yarn
+    - run: yarn build
+    - name: Deploy using web4
+      run: yarn exec web4-deploy build/ thewiki.near
