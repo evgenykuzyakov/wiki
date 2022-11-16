@@ -78,4 +78,11 @@ impl Contract {
     pub fn set_ipfs_hash(&mut self, ipfs_hash: String) {
         self.ipfs_hash = ipfs_hash;
     }
+
+    #[private]
+    pub fn web4_setStaticUrl(&mut self, url: String) {
+        if url.starts_with("ipfs:") {
+            self.ipfs_hash = url[5..].to_string();
+        }
+    }
 }
