@@ -21,4 +21,4 @@ jobs:
     - run: yarn
     - run: yarn build
     - name: Deploy using web4
-      run: yarn exec web4-deploy build/ thewiki.near
+      run: npx web4-deploy build/ thewiki.near
