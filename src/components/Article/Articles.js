@@ -52,8 +52,7 @@ export default function Articles(props) {
 
   useEffect(() => {
     if (account.near && numArticles !== null) {
-      const lastOffset =
-        articleIds.length > 0 ? articleIds[articleIds.length - 1] : numArticles;
+      const lastOffset = numArticles - articleIds.length;
       if (lastOffset > 0) {
         fetchArticleIds(
           Math.trunc((lastOffset - 1) / FetchLimit) * FetchLimit,

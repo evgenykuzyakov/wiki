@@ -54,8 +54,7 @@ export default function Authors(props) {
 
   useEffect(() => {
     if (near && numAccounts !== null) {
-      const lastOffset =
-        accounts.length > 0 ? accounts[accounts.length - 1] : numAccounts;
+      const lastOffset = numAccounts - accounts.length;
       if (lastOffset > 0) {
         fetchAccounts(
           Math.trunc((lastOffset - 1) / FetchLimit) * FetchLimit,

@@ -97,7 +97,7 @@ impl Contract {
         let values = self.accounts.values_as_vector();
         let from_index = from_index.unwrap_or(0);
         let limit = limit.unwrap_or(values.len());
-        (from_index..std::cmp::min(values.len(), limit))
+        (from_index..std::cmp::min(values.len(), from_index + limit))
             .map(|index| (keys.get(index).unwrap(), values.get(index).unwrap().into()))
             .collect()
     }
