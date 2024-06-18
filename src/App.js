@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
+import Cookies from 'js-cookie'
 import "error-polyfill";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "./App.scss";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
-import { NearConfig, TGas, useNearPromise } from "./data/near";
+import { TGas, useNearPromise } from "./data/near";
 import ArticlePage from "./pages/ArticlePage";
 import HistoryPage from "./pages/HistoryPage";
 import { OneNear } from "./data/utils";
@@ -16,46 +17,30 @@ import AuthorPage from "./pages/AuthorPage";
 
 export const refreshAllowanceObj = {};
 
+const WEB4_ACCOUNT_ID = "web4_account_id";
+
 function App(props) {
+  const signedIn = !!Cookies.get(WEB4_ACCOUNT_ID);
+  const signedAccountId = Cookies.get(WEB4_ACCOUNT_ID);
   const [connected, setConnected] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
-  const [signedAccountId, setSignedAccountId] = useState(null);
+  const [redirectUrl, setRedirectUrl] = useState(null);
 
   const _near = useNearPromise();
   const account = useAccount();
 
-  const requestSignIn = useCallback(
-    async (e) => {
-      e && e.preventDefault();
-      const appTitle = "wiki";
-      const near = await _near;
+  // TODO: Obtain contractId elsewhere
+  const contractId = account?.near?.contract.contractId;
 
-      await near.walletConnection.requestSignIn(
-        NearConfig.contractName,
-        appTitle
-      );
-      return false;
-    },
-    [_near]
-  );
+  const requestSignIn = useCallback((e) => {
+    setRedirectUrl('/web4/login');
+  }, []);
 
-  const logOut = useCallback(async () => {
-    const near = await _near;
-    near.walletConnection.signOut();
-    near.accountId = null;
-    setSignedIn(false);
-    setSignedAccountId(null);
-  }, [_near]);
+  const logOut = useCallback(() => {
+    // TODO: Is anything else needed here like clearing cookies?
+    setRedirectUrl('/web4/logout');
+  }, []);
 
-  const donate = async (e) => {
-    e.preventDefault();
-    await account.near.contract.donate(
-      {},
-      TGas.mul(10).toFixed(),
-      OneNear.toFixed()
-    );
-  };
-
+  // TODO: Check if this still works (probably just need to be handled by web4)
   const refreshAllowance = useCallback(async () => {
     alert(
       "You're out of access key allowance. Need sign in again to refresh it"
@@ -67,8 +52,6 @@ function App(props) {
 
   useEffect(() => {
     _near.then((near) => {
-      setSignedIn(!!near.accountId);
-      setSignedAccountId(near.accountId);
       setConnected(true);
     });
   }, [_near]);
@@ -91,9 +74,11 @@ function App(props) {
     </div>
   ) : signedIn ? (
     <div>
-      <button className="btn btn-outline-light me-2" onClick={donate}>
-        Donate 1 NEAR for storage
-      </button>
+      <form action={`/web4/contract/${contractId}/donate`} method="POST" style={{ display: "inline" }}>
+        <input type="hidden" name="web4_gas" value={TGas.mul(10).toFixed()} />
+        <input type="hidden" name="web4_deposit" value={OneNear.toFixed()} />
+        <button className="btn btn-outline-light me-2" type="submit">Donate 1 NEAR for storage</button>
+      </form>
 
       <button className="btn btn-outline-light" onClick={() => logOut()}>
         Sign out <SocialAccount accountId={signedAccountId} />
@@ -105,10 +90,15 @@ function App(props) {
         className="btn btn-outline-light"
         onClick={(e) => requestSignIn(e)}
       >
-        Sign in with NEAR Wallet
+        Sign in with NEAR
       </button>
     </div>
   );
+
+  if (redirectUrl) {
+    window.location.href = redirectUrl;
+    return <div>Redirecting...</div>;
+  }
 
   return (
     <div className="App">
@@ -160,7 +150,7 @@ function App(props) {
                   </Link>
                 </li>
               </ul>
-              <form className="d-flex">{header}</form>
+              <div className="d-flex">{header}</div>
             </div>
           </div>
         </nav>

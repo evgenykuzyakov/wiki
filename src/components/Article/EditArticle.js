@@ -7,6 +7,7 @@ import { TGas } from "../../data/near";
 import Editor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { Markdown } from "./Markdown";
+import { postJson } from "../../data/fetch-json";
 
 const defaultBody = (articleId) => `# ${articleId}
 
@@ -46,14 +47,14 @@ export default function EditArticle(props) {
   const postArticle = async () => {
     setLoading(true);
 
-    await account.near.contract.post_article(
-      {
-        article_id: articleId,
-        body,
-        navigation_id: navigationId !== "" ? navigationId : null,
-      },
-      TGas.mul(75).toFixed()
-    );
+    // TODO: Pass contractId without using account.near
+    const contractId = account.near.contract.contractId;
+    await postJson(`/web4/contract/${contractId}/post_article`, {
+      article_id: articleId,
+      body,
+      navigation_id: navigationId !== "" ? navigationId : null,
+      web4_gas: TGas.mul(75).toFixed(),
+    });
 
     const newArticle = {
       body,
