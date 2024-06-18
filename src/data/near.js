@@ -1,4 +1,5 @@
 import * as nearAPI from "near-api-js";
+import Cookies from "js-cookie";
 import { singletonHook } from "react-singleton-hook";
 import Big from "big.js";
 import { refreshAllowanceObj } from "../App";
@@ -86,12 +87,9 @@ async function _initNear() {
   _near.keyStore = keyStore;
   _near.nearConnection = nearConnection;
 
-  _near.walletConnection = new nearAPI.WalletConnection(
-    nearConnection,
-    NearConfig.contractName
-  );
-  _near.accountId = _near.walletConnection.getAccountId();
-  _near.account = _near.walletConnection.account();
+  // TODO: This is a hack, move everything to use web4 directly via REST API
+  _near.accountId = Cookies.get('web4_account_id');
+  _near.account = await nearConnection.account(_near.accountId);
 
   _near.contract = wrapContract(_near.account, NearConfig.contractName, {
     viewMethods: [
