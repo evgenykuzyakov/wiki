@@ -5,8 +5,6 @@ concurrency: production
 on:
   push:
     branches: [ "master" ]
-env:
-  NODE_OPTIONS: --openssl-legacy-provider
 
 jobs:
   build:
@@ -21,6 +19,7 @@ jobs:
         node-version: 18.x
         cache: 'yarn'
     - run: yarn
-    - run: yarn build
+    - name: Build
+      run: NODE_OPTIONS=--openssl-legacy-provider yarn build
     - name: Deploy using web4
       run: npx web4-deploy build/ thewiki.near

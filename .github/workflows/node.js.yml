@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  NODE_OPTIONS: --openssl-legacy-provider
-
 jobs:
   build:
 
@@ -30,4 +27,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn
-    - run: yarn build
+    - name: Build
+      run: NODE_OPTIONS=--openssl-legacy-provider yarn build
