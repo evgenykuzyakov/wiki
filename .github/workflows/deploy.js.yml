@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: NODE_OPTIONS=--openssl-legacy-provider yarn build
     - name: Deploy using web4
-      run: npx web4-deploy build/ thewiki.near
+      run: npx web4-deploy build/ thewiki.near --yes
