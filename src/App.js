@@ -15,6 +15,8 @@ import SocialAccount from "./components/SocialAccount/SocialAccount";
 import AuthorsPage from "./pages/AuthorsPage";
 import AuthorPage from "./pages/AuthorPage";
 
+import { NearConfig } from "./data/near";
+
 export const refreshAllowanceObj = {};
 
 const WEB4_ACCOUNT_ID = "web4_account_id";
@@ -32,7 +34,7 @@ function App(props) {
   const contractId = account?.near?.contract.contractId;
 
   const requestSignIn = useCallback((e) => {
-    setRedirectUrl('/web4/login');
+    setRedirectUrl(`/web4/login?web4_contract_id=${NearConfig.contractName}`);
   }, []);
 
   const logOut = useCallback(() => {
